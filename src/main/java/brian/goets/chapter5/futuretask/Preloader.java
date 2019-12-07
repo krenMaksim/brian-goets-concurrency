@@ -3,9 +3,19 @@ package brian.goets.chapter5.futuretask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 public class Preloader {
     ProductInfo loadProductInfo() throws DataLoadException {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(String.format("i=%d; %s", i, Thread.currentThread().getName()));
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         return null;
     }
 
@@ -34,6 +44,18 @@ public class Preloader {
     }
 
     interface ProductInfo {
+    }
+}
+
+
+class LaunderThrowable {
+    public static RuntimeException launderThrowable(Throwable t) {
+        if (t instanceof RuntimeException)
+            return (RuntimeException) t;
+        else if (t instanceof Error)
+            throw (Error) t;
+        else
+            throw new IllegalStateException("Not unchecked", t);
     }
 }
 
