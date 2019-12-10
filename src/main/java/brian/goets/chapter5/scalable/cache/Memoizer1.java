@@ -1,10 +1,10 @@
 package brian.goets.chapter5.scalable.cache;
 
-import java.math.BigInteger;
+import brian.goets.annotation.GuardedBy;
+import brian.goets.chapter5.scalable.cache.util.Computable;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import brian.goets.annotation.GuardedBy;
 
 public class Memoizer1<A, V> implements Computable<A, V> {
     @GuardedBy("this")
@@ -15,6 +15,7 @@ public class Memoizer1<A, V> implements Computable<A, V> {
         this.c = c;
     }
 
+    @Override
     public synchronized V compute(A arg) throws InterruptedException {
         V result = cache.get(arg);
         if (result == null) {
@@ -22,18 +23,5 @@ public class Memoizer1<A, V> implements Computable<A, V> {
             cache.put(arg, result);
         }
         return result;
-    }
-}
-
-
-interface Computable<A, V> {
-    V compute(A arg) throws InterruptedException;
-}
-
-
-class ExpensiveFunction implements Computable<String, BigInteger> {
-    public BigInteger compute(String arg) {
-        // after deep thought...
-        return new BigInteger(arg);
     }
 }

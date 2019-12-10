@@ -1,5 +1,7 @@
 package brian.goets.chapter5.scalable.cache;
 
+import brian.goets.chapter5.scalable.cache.util.Computable;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +13,7 @@ public class Memoizer2<A, V> implements Computable<A, V> {
         this.c = c;
     }
 
+    @Override
     public V compute(A arg) throws InterruptedException {
         V result = cache.get(arg);
         if (result == null) {
