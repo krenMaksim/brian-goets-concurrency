@@ -1,4 +1,4 @@
-package brian.goets.chapter5.scalable.cache.util;
+package brian.goets.util;
 
 
 public class LaunderThrowable {

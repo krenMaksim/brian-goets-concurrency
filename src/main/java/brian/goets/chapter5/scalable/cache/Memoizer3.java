@@ -1,7 +1,7 @@
 package brian.goets.chapter5.scalable.cache;
 
 import brian.goets.chapter5.scalable.cache.util.Computable;
-import brian.goets.chapter5.scalable.cache.util.LaunderThrowable;
+import brian.goets.util.LaunderThrowable;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
