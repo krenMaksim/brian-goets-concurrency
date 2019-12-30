@@ -1,9 +1,7 @@
 package brian.goets.chapter6.listing6_4;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executor;
@@ -37,8 +35,10 @@ class TaskExecutionWebServer {
     }
 
     private static String convert(InputStream inputStream) throws IOException {
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-            return bufferedReader.readLine();
+        StringBuffer input = new StringBuffer();
+        while (inputStream.available() > 0) {
+            input.append((char) inputStream.read());
         }
+        return input.toString();
     }
 }
