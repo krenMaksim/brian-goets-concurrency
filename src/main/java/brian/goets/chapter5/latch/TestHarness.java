@@ -4,9 +4,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class TestHarness {
-    public long timeTasks(int nThreads, final Runnable task) throws InterruptedException {
-        final CountDownLatch startGate = new CountDownLatch(1);
-        final CountDownLatch endGate = new CountDownLatch(nThreads);
+    public long timeTasks(int nThreads, Runnable task) throws InterruptedException {
+        CountDownLatch startGate = new CountDownLatch(1);
+        CountDownLatch endGate = new CountDownLatch(nThreads);
 
         for (int i = 0; i < nThreads; i++) {
             Thread t = new Thread() {
