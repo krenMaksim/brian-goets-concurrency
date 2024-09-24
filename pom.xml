@@ -12,7 +12,18 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <!--mvn install:install-file -Dfile=".\jcip-examples-src.jar" -DgroupId=net.jcip -DartifactId=jcip-examples -Dversion=1.0 -Dpackaging=jar -->
+            <!-- https://jcip.net/-->
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-examples</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
