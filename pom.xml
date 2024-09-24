@@ -13,9 +13,9 @@
 
     <dependencies>
         <dependency>
-            <!--mvn install:install-file -Dfile=".\jcip-examples-src.jar" -DgroupId=net.jcip -DartifactId=jcip-examples -Dversion=1.0 -Dpackaging=jar -->
+            <!--mvn install:install-file -Dfile=".\jcip-examples-src.jar" -DgroupId=net.jcip.examples -DartifactId=jcip-examples -Dversion=1.0 -Dpackaging=jar -->
             <!-- https://jcip.net/-->
-            <groupId>net.jcip</groupId>
+            <groupId>net.jcip.examples</groupId>
             <artifactId>jcip-examples</artifactId>
             <version>1.0</version>
         </dependency>
