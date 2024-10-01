@@ -58,6 +58,17 @@ class UnsafeSequenceTest {
     assertThat(result).isEqualTo(NUMBER_OF_ITERATIONS);
   }
 
+  @RepeatedTest(10)
+  void doGivenNumberOfIterationsOverAtomicSequence() throws InterruptedException {
+    AtomicSequence atomicSequence = new AtomicSequence();
+
+    submitForExecutionForNumberOfTimes(() -> atomicSequence.getNext(), NUMBER_OF_ITERATIONS);
+    int result = atomicSequence.getNext();
+
+    System.out.println("Result: " + result);
+    assertThat(result).isEqualTo(NUMBER_OF_ITERATIONS);
+  }
+
   // TBD what about using a barrier for blocking
 
   private <T> void submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
