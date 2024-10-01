@@ -1,41 +1,36 @@
 package brian.goets.chapter1.listing1_1;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UnsafeSequenceTest {
 
+  private ExecutorService exec;
+
+  @BeforeEach
+  void setUp() {
+    int availableProcessors = Runtime.getRuntime().availableProcessors();
+    exec = Executors.newFixedThreadPool(availableProcessors);
+  }
+
   //
   //  @Test
   @RepeatedTest(10)
-  void getNext() {
-    int cores = Runtime.getRuntime().availableProcessors();
-    ExecutorService exec = Executors.newFixedThreadPool(cores);
-
-    var unsafeSequence = new UnsafeSequence();
-
-    Runnable task = () -> {
-      unsafeSequence.getNext();
-      //      System.out.println(Thread.currentThread().getName() + " " + unsafeSequence.getNext());
-    };
-
+  void getNext() throws InterruptedException {
     int numberOfIterations = 1_000;
-    IntStream.rangeClosed(1, numberOfIterations).forEach(i -> exec.execute(task));
+    UnsafeSequence unsafeSequence = new UnsafeSequence();
 
+    IntStream.rangeClosed(1, numberOfIterations).forEach(i -> exec.execute(() -> unsafeSequence.getNext()));
     exec.shutdown();
-
-    while (!exec.isTerminated()) {
-      // Noop. Waiting
-    }
-
-    //    System.out.println(exec.isTerminated());
+    exec.awaitTermination(30, TimeUnit.SECONDS);
     int result = unsafeSequence.getNext();
-    //    System.out.println(result);
 
     assertThat(result).isNotEqualTo(numberOfIterations);
   }
