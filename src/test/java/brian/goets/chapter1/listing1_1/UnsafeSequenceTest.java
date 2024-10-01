@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UnsafeSequenceTest {
 
+  private static final int NUMBER_OF_ITERATIONS = 10_000;
+
   private ExecutorService exec;
 
   @BeforeEach
@@ -25,19 +27,23 @@ class UnsafeSequenceTest {
 
   @RepeatedTest(10)
   void doGivenNumberOfIterations() throws InterruptedException {
-    int numberOfIterations = 10_000;
     UnsafeSequence unsafeSequence = new UnsafeSequence();
-    Callable<Integer> task = () -> unsafeSequence.getNext();
 
-    List<Callable<Integer>> tasks = IntStream.rangeClosed(1, numberOfIterations)
-        .mapToObj(i -> task)
-        .collect(Collectors.toList());
-    exec.invokeAll(tasks);
-    exec.shutdown();
-    exec.awaitTermination(30, TimeUnit.SECONDS);
+    submitForExecutionForNumberOfTimes(() -> unsafeSequence.getNext(), NUMBER_OF_ITERATIONS);
     int result = unsafeSequence.getNext();
 
     System.out.println("Result: " + result);
-    assertThat(result).isNotEqualTo(numberOfIterations);
+    assertThat(result).isNotEqualTo(NUMBER_OF_ITERATIONS);
+  }
+
+  private <T> void submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
+    List<Callable<T>> tasks = IntStream.rangeClosed(1, numberOfIterations)
+        .mapToObj(i -> task)
+        .collect(Collectors.toList());
+
+    exec.invokeAll(tasks);
+
+    exec.shutdown();
+    exec.awaitTermination(30, TimeUnit.SECONDS);
   }
 }
