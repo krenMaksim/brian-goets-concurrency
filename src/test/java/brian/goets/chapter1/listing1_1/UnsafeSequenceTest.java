@@ -26,8 +26,19 @@ class UnsafeSequenceTest {
   }
 
   @RepeatedTest(10)
-  void doGivenNumberOfIterations() throws InterruptedException {
+  void doGivenNumberOfIterationsOverUnsafeSequence() throws InterruptedException {
     UnsafeSequence unsafeSequence = new UnsafeSequence();
+
+    submitForExecutionForNumberOfTimes(() -> unsafeSequence.getNext(), NUMBER_OF_ITERATIONS);
+    int result = unsafeSequence.getNext();
+
+    System.out.println("Result: " + result);
+    assertThat(result).isNotEqualTo(NUMBER_OF_ITERATIONS);
+  }
+
+  @RepeatedTest(10)
+  void doGivenNumberOfIterationsOverUnsafeVolatileSequence() throws InterruptedException {
+    UnsafeVolatileSequence unsafeSequence = new UnsafeVolatileSequence();
 
     submitForExecutionForNumberOfTimes(() -> unsafeSequence.getNext(), NUMBER_OF_ITERATIONS);
     int result = unsafeSequence.getNext();
