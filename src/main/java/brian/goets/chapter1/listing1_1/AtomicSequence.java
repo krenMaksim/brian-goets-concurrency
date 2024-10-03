@@ -5,7 +5,7 @@ import net.jcip.annotations.ThreadSafe;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @ThreadSafe
-public class AtomicSequence {
+class AtomicSequence {
 
   private final AtomicInteger value = new AtomicInteger();
 

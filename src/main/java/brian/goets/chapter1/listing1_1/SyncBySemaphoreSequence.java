@@ -5,7 +5,7 @@ import net.jcip.annotations.ThreadSafe;
 import java.util.concurrent.Semaphore;
 
 @ThreadSafe
-public class SyncBySemaphoreSequence {
+class SyncBySemaphoreSequence {
 
   private final Semaphore semaphore = new Semaphore(1);
   private int value;
