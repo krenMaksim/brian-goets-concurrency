@@ -71,6 +71,7 @@ class UnsafeSequenceTest {
 
   // TBD what about using a barrier for blocking
   // TBD Lock lock = new ReentrantLock();
+  // TBD sync via block
 
   private <T> void submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
     List<Callable<T>> tasks = IntStream.rangeClosed(1, numberOfIterations)
