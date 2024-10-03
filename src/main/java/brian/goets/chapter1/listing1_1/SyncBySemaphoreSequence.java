@@ -5,11 +5,12 @@ import net.jcip.annotations.ThreadSafe;
 import java.util.concurrent.Semaphore;
 
 @ThreadSafe
-class SyncBySemaphoreSequence {
+class SyncBySemaphoreSequence implements Sequence {
 
   private final Semaphore semaphore = new Semaphore(1);
   private int value;
 
+  @Override
   public int getNext() throws InterruptedException {
     int next;
     semaphore.acquire();
