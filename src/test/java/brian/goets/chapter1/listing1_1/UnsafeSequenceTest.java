@@ -82,16 +82,21 @@ class UnsafeSequenceTest {
 
   @RepeatedTest(10)
   void doGivenNumberOfIterationsOverSyncViaBlockSequence() throws InterruptedException {
-    SyncViaBlockSequence syncViaBlockSequence = new SyncViaBlockSequence();
+    Sequence sequence = new SyncViaBlockSequence();
 
-    submitForExecutionForNumberOfTimes(() -> syncViaBlockSequence.getNext(), NUMBER_OF_ITERATIONS);
-    int result = syncViaBlockSequence.getNext();
+    int result = doGivenNumberOfConcurrentIterations(sequence, NUMBER_OF_ITERATIONS);
 
-    System.out.println("Result: " + result);
     assertThat(result).isEqualTo(NUMBER_OF_ITERATIONS);
   }
 
   // TBD Lock lock = new ReentrantLock();
+
+  private int doGivenNumberOfConcurrentIterations(Sequence sequence, int iterations) throws InterruptedException {
+    submitForExecutionForNumberOfTimes(() -> sequence.getNext(), iterations);
+    int result = sequence.getNext();
+    System.out.println("Result: " + result);
+    return result;
+  }
 
   private <T> void submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
     List<Callable<T>> tasks = IntStream.rangeClosed(1, numberOfIterations)
