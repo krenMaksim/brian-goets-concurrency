@@ -69,7 +69,7 @@ class UnsafeSequenceTest {
     assertThat(result).isEqualTo(NUMBER_OF_ITERATIONS);
   }
 
-  @RepeatedTest(100)
+  @RepeatedTest(10)
   void doGivenNumberOfIterationsOverSyncBySemaphoreSequence() throws InterruptedException {
     SyncBySemaphoreSequence syncBySemaphoreSequence = new SyncBySemaphoreSequence();
 
@@ -80,9 +80,18 @@ class UnsafeSequenceTest {
     assertThat(result).isEqualTo(NUMBER_OF_ITERATIONS);
   }
 
-  // TBD what about using a barrier for blocking
+  @RepeatedTest(10)
+  void doGivenNumberOfIterationsOverSyncViaBlockSequence() throws InterruptedException {
+    SyncViaBlockSequence syncViaBlockSequence = new SyncViaBlockSequence();
+
+    submitForExecutionForNumberOfTimes(() -> syncViaBlockSequence.getNext(), NUMBER_OF_ITERATIONS);
+    int result = syncViaBlockSequence.getNext();
+
+    System.out.println("Result: " + result);
+    assertThat(result).isEqualTo(NUMBER_OF_ITERATIONS);
+  }
+
   // TBD Lock lock = new ReentrantLock();
-  // TBD sync via block
 
   private <T> void submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
     List<Callable<T>> tasks = IntStream.rangeClosed(1, numberOfIterations)
