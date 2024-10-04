@@ -1,6 +1,5 @@
 package brian.goets.chapter1.listing1_1;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 
@@ -17,14 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SequenceTest {
 
   private static final int NUMBER_OF_ITERATIONS = 10_000;
+  public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
-  private ExecutorService exec;
-
-  @BeforeEach
-  void setUp() {
-    int availableProcessors = Runtime.getRuntime().availableProcessors();
-    exec = Executors.newFixedThreadPool(availableProcessors);
-  }
+  private ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS);
 
   @Nested
   class NotThreadSafeSequenceTest {
