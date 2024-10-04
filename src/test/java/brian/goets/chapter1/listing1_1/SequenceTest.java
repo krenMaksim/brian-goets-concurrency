@@ -95,6 +95,8 @@ class SequenceTest {
 
       assertThat(lastNumber).isEqualTo(NUMBER_OF_ITERATIONS);
     }
+
+    // TBD what about trying to implement CAS approach. See page 348 Listing 15.5
   }
 
   private int doGivenNumberOfConcurrentIterations(Sequence sequence, int iterations) throws InterruptedException {
