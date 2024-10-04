@@ -87,7 +87,14 @@ class SequenceTest {
       assertThat(lastNumber).isEqualTo(NUMBER_OF_ITERATIONS);
     }
 
-    // TBD Lock lock = new ReentrantLock();
+    @RepeatedTest(10)
+    void doGivenNumberOfIterationsOverSyncByReentrantLockSequence() throws InterruptedException {
+      Sequence sequence = new SyncByReentrantLockSequence();
+
+      int lastNumber = doGivenNumberOfConcurrentIterations(sequence, NUMBER_OF_ITERATIONS);
+
+      assertThat(lastNumber).isEqualTo(NUMBER_OF_ITERATIONS);
+    }
   }
 
   private int doGivenNumberOfConcurrentIterations(Sequence sequence, int iterations) throws InterruptedException {
