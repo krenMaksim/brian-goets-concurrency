@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SequenceTest {
 
   private static final int NUMBER_OF_ITERATIONS = 10_000;
-  public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
+  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   private ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS);
 
