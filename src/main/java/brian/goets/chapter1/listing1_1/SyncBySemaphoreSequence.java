@@ -12,10 +12,11 @@ class SyncBySemaphoreSequence implements Sequence {
 
   @Override
   public int getNext() throws InterruptedException {
-    int next;
     semaphore.acquire();
-    next = value++;
-    semaphore.release();
-    return next;
+    try {
+      return value++;
+    } finally {
+      semaphore.release();
+    }
   }
 }
