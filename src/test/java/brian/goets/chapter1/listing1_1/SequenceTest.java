@@ -90,7 +90,14 @@ class SequenceTest {
       assertThat(lastNumber).isEqualTo(NUMBER_OF_ITERATIONS);
     }
 
-    // TBD what about trying to implement CAS approach. See page 348 Listing 15.5. It is likely volatile is needed.
+    @RepeatedTest(10)
+    void doGivenNumberOfIterationsOverSyncByCasSequence() throws InterruptedException {
+      Sequence sequence = new SyncByCasSequence();
+
+      int lastNumber = doGivenNumberOfConcurrentIterations(sequence, NUMBER_OF_ITERATIONS);
+
+      assertThat(lastNumber).isEqualTo(NUMBER_OF_ITERATIONS);
+    }
   }
 
   private int doGivenNumberOfConcurrentIterations(Sequence sequence, int iterations) throws InterruptedException {
