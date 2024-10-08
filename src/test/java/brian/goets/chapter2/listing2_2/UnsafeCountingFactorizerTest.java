@@ -31,10 +31,10 @@ class UnsafeCountingFactorizerTest {
   }
 
   private long doGivenNumberOfConcurrentIterations(UnsafeCountingFactorizer factorizer, int iterations) throws InterruptedException {
-    ServletRequest req = null;
-    ServletResponse resp = null;
+    ServletRequest reqDummy = null;
+    ServletResponse respDummy = null;
     submitForExecutionForNumberOfTimes(() -> {
-      factorizer.service(req, resp);
+      factorizer.service(reqDummy, respDummy);
       return true;
     }, iterations);
     long counter = factorizer.getCount();
@@ -42,6 +42,7 @@ class UnsafeCountingFactorizerTest {
     return counter;
   }
 
+  // TBD think about allocation helper class
   private <T> void submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
     List<Callable<T>> tasks = IntStream.rangeClosed(1, numberOfIterations)
         .mapToObj(i -> task)
