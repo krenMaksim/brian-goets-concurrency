@@ -9,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 @NotThreadSafe
-public class UnsafeCountingFactorizer extends GenericServlet implements Servlet {
+class UnsafeCountingFactorizer extends GenericServlet implements Servlet {
 
   private long count = 0;
 
@@ -17,6 +17,7 @@ public class UnsafeCountingFactorizer extends GenericServlet implements Servlet 
     return count;
   }
 
+  @Override
   public void service(ServletRequest req, ServletResponse resp) {
     BigInteger i = extractFromRequest(req);
     BigInteger[] factors = factor(i);
@@ -24,15 +25,14 @@ public class UnsafeCountingFactorizer extends GenericServlet implements Servlet 
     encodeIntoResponse(resp, factors);
   }
 
-  void encodeIntoResponse(ServletResponse res, BigInteger[] factors) {
+  private void encodeIntoResponse(ServletResponse res, BigInteger[] factors) {
   }
 
-  BigInteger extractFromRequest(ServletRequest req) {
+  private BigInteger extractFromRequest(ServletRequest req) {
     return new BigInteger("7");
   }
 
-  BigInteger[] factor(BigInteger i) {
-    // Doesn't really factor
+  private BigInteger[] factor(BigInteger i) {
     return new BigInteger[] {i};
   }
 }
