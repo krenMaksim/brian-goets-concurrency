@@ -3,7 +3,9 @@ package brian.goets.chapter2.listing2_3;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import static brian.goets.test.util.TaskIterator.submitForExecutionForNumberOfTimes;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,13 +25,18 @@ class LazyInitTest {
   }
 
   private int doGivenNumberOfConcurrentInitializations(LazyInit lazyInit, int iterations) throws InterruptedException {
-    Set<ExpensiveObject> createdInstances = ConcurrentHashMap.newKeySet();
-    submitForExecutionForNumberOfTimes(() -> {
-      ExpensiveObject instance = lazyInit.getInstance();
-      createdInstances.add(instance);
-      return instance;
-    }, iterations);
+    Set<ExpensiveObject> createdInstances = submitForExecutionForNumberOfTimes(lazyInit::getInstance, iterations).stream()
+        .map(this::toExpensiveObject)
+        .collect(Collectors.toSet());
     System.out.println("Created instances: " + createdInstances);
     return createdInstances.size();
+  }
+
+  private ExpensiveObject toExpensiveObject(Future<ExpensiveObject> future) {
+    try {
+      return future.get();
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
