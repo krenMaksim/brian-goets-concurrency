@@ -14,7 +14,7 @@ import javax.servlet.ServletResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UnsafeCountingFactorizerTest {
+class FactorizerServletTest {
 
   private static final int NUMBER_OF_ITERATIONS = 10_000;
   private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
@@ -22,15 +22,15 @@ class UnsafeCountingFactorizerTest {
   private ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS);
 
   @RepeatedTest(10)
-  void sendGivenNumberRequests() throws InterruptedException {
-    UnsafeCountingFactorizer factorizer = new UnsafeCountingFactorizer();
+  void doGivenNumberOfIterationsOverUnsafeCountingFactorizer() throws InterruptedException {
+    FactorizerServlet factorizer = new UnsafeCountingFactorizer();
 
     long counter = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
 
     assertThat(counter).isNotEqualTo(NUMBER_OF_ITERATIONS);
   }
 
-  private long doGivenNumberOfConcurrentIterations(UnsafeCountingFactorizer factorizer, int iterations) throws InterruptedException {
+  private long doGivenNumberOfConcurrentIterations(FactorizerServlet factorizer, int iterations) throws InterruptedException {
     ServletRequest reqDummy = null;
     ServletResponse respDummy = null;
     submitForExecutionForNumberOfTimes(() -> {
