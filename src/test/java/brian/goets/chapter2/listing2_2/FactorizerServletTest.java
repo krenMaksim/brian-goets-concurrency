@@ -21,6 +21,15 @@ class FactorizerServletTest {
     assertThat(counter).isNotEqualTo(NUMBER_OF_ITERATIONS);
   }
 
+  @RepeatedTest(10)
+  void doGivenNumberOfIterationsOverAtomicCountingFactorizer() throws InterruptedException {
+    FactorizerServlet factorizer = new AtomicCountingFactorizer();
+
+    long counter = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
+
+    assertThat(counter).isEqualTo(NUMBER_OF_ITERATIONS);
+  }
+
   private long doGivenNumberOfConcurrentIterations(FactorizerServlet factorizer, int iterations) throws InterruptedException {
     ServletRequest reqDummy = null;
     ServletResponse respDummy = null;
