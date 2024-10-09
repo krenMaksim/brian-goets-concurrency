@@ -3,22 +3,12 @@ package brian.goets.chapter1.listing1_1;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
+import static brian.goets.test.util.TaskIterator.submitForExecutionForNumberOfTimes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SequenceTest {
 
   private static final int NUMBER_OF_ITERATIONS = 10_000;
-  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
-
-  private ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS);
 
   @Nested
   class NotThreadSafeSequenceTest {
@@ -105,16 +95,5 @@ class SequenceTest {
     int lastNumber = sequence.getNext();
     System.out.println("LastNumber: " + lastNumber);
     return lastNumber;
-  }
-
-  private <T> void submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
-    List<Callable<T>> tasks = IntStream.rangeClosed(1, numberOfIterations)
-        .mapToObj(i -> task)
-        .collect(Collectors.toList());
-
-    exec.invokeAll(tasks);
-
-    exec.shutdown();
-    exec.awaitTermination(30, TimeUnit.SECONDS);
   }
 }
