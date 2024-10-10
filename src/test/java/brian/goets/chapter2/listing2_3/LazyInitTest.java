@@ -24,6 +24,15 @@ class LazyInitTest {
     assertThat(createdInstancesNumber).isNotEqualTo(SINGLE_INSTANCE);
   }
 
+  @RepeatedTest(10)
+  void doGivenNumberOfInitializationsViaLazyInitDelayedRace() throws InterruptedException {
+    LazyInit lazyInit = new LazyInitDelayedRace();
+
+    int createdInstancesNumber = doGivenNumberOfConcurrentInitializations(lazyInit, NUMBER_OF_ITERATIONS);
+
+    assertThat(createdInstancesNumber).isNotEqualTo(SINGLE_INSTANCE);
+  }
+
   private int doGivenNumberOfConcurrentInitializations(LazyInit lazyInit, int iterations) throws InterruptedException {
     Set<ExpensiveObject> createdInstances = submitForExecutionForNumberOfTimes(lazyInit::getInstance, iterations).stream()
         .map(this::toExpensiveObject)
