@@ -42,7 +42,15 @@ class LazyInitTest {
     assertThat(createdInstancesNumber).isEqualTo(SINGLE_INSTANCE);
   }
 
-  // Double check
+  @RepeatedTest(10)
+  void doGivenNumberOfInitializationsViaLazyInitDoubleCheck() throws InterruptedException {
+    LazyInit lazyInit = new LazyInitDoubleCheck();
+
+    int createdInstancesNumber = doGivenNumberOfConcurrentInitializations(lazyInit, NUMBER_OF_ITERATIONS);
+
+    assertThat(createdInstancesNumber).isEqualTo(SINGLE_INSTANCE);
+  }
+
   // Try volatile
   // CAP
 
