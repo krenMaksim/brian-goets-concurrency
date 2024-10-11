@@ -21,7 +21,7 @@ class UnsafeCachingFactorizerTest {
 
     List<Result> results = doGivenNumberOfConcurrentInitializations(factorizer, NUMBER_OF_ITERATIONS);
 
-    results.forEach(result -> assertThat(result.getFactors()).containsExactly(result.getFactorNumber()));
+    results.forEach(result -> assertThat(result.factors).containsExactly(result.factorNumber));
   }
 
   private List<Result> doGivenNumberOfConcurrentInitializations(UnsafeCachingFactorizer factorizer, int iterations) throws InterruptedException {
@@ -36,22 +36,5 @@ class UnsafeCachingFactorizerTest {
     }, iterations);
   }
 
-  static class Result {
-
-    private final BigInteger factorNumber;
-    private final BigInteger[] factors;
-
-    public Result(BigInteger factorNumber, BigInteger[] factors) {
-      this.factorNumber = factorNumber;
-      this.factors = factors;
-    }
-
-    public BigInteger getFactorNumber() {
-      return factorNumber;
-    }
-
-    public BigInteger[] getFactors() {
-      return factors;
-    }
-  }
+  private record Result(BigInteger factorNumber, BigInteger[] factors) {}
 }
