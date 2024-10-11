@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 @ThreadSafe
 class SyncCachingFactorizer extends CachingFactorizer {
 
+  // TBD think if having AtomicReference makes any sense at all here
   private final AtomicReference<BigInteger> lastNumber = new AtomicReference<>();
   private final AtomicReference<BigInteger[]> lastFactors = new AtomicReference<>();
 
@@ -26,13 +27,15 @@ class SyncCachingFactorizer extends CachingFactorizer {
     encodeIntoResponse(resp, factors);
   }
 
+  // here we have atomic check and get
   private synchronized BigInteger[] fetchFromCache(BigInteger factorNumber) {
     if (factorNumber.equals(lastNumber.get())) {
-      return lastFactors.get();
+      return lastFactors.get().clone(); // Take notice that we clone here. TBD think if it is really needed.
     }
     return null;
   }
 
+  // here we have atomic set
   private synchronized void updateCache(BigInteger factorNumber, BigInteger[] factors) {
     lastNumber.set(factorNumber);
     lastFactors.set(factors);
