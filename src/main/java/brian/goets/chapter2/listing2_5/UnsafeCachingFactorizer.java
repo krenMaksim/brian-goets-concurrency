@@ -15,12 +15,12 @@ class UnsafeCachingFactorizer extends CachingFactorizer {
 
   @Override
   public void service(ServletRequest req, ServletResponse resp) {
-    BigInteger i = extractFromRequest(req);
-    if (i.equals(lastNumber.get())) {
+    BigInteger factorNumber = extractFromRequest(req);
+    if (factorNumber.equals(lastNumber.get())) {
       encodeIntoResponse(resp, lastFactors.get());
     } else {
-      BigInteger[] factors = factor(i);
-      lastNumber.set(i);
+      BigInteger[] factors = factor(factorNumber);
+      lastNumber.set(factorNumber);
       lastFactors.set(factors);
       encodeIntoResponse(resp, factors);
     }
