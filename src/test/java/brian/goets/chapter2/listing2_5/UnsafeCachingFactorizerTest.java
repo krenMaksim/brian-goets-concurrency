@@ -1,21 +1,25 @@
 package brian.goets.chapter2.listing2_5;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class UnsafeCachingFactorizerTest {
 
   @Test
   void doSomething() throws IOException {
-    UnsafeCachingFactorizer fact = new UnsafeCachingFactorizer();
-    ServletRequest request = Mockito.mock(ServletRequest.class);
-    Mockito.when(request.getAttribute("value")).thenReturn(new BigInteger("666"));
-    ServletResponse response = Mockito.mock(ServletResponse.class);
-    Mockito.when(response.getContentType()).thenReturn("list of factors");
+    UnsafeCachingFactorizer factorizer = new UnsafeCachingFactorizer();
+    ServletRequest request = ServletHelper.newServletRequestWithFactorNumber(new BigInteger("42"));
+    ServletResponse response = ServletHelper.newServletResponse();
+
+    factorizer.service(request, response);
+    BigInteger[] factors = ServletHelper.extractFactors(response);
+
+    assertThat(factors).isEqualTo(new BigInteger[] {new BigInteger("42")});
   }
 }

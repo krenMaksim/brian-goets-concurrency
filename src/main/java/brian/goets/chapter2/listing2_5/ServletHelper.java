@@ -13,7 +13,7 @@ class ServletHelper {
   private static final String FACTOR_NUMBER = "factorNumber";
   public static final String FACTORS_DELIMITER = " ";
 
-  public static ServletRequest newRequestWithFactorNumber(BigInteger number) {
+  public static ServletRequest newServletRequestWithFactorNumber(BigInteger number) {
     ServletRequest request = Mockito.mock(ServletRequest.class);
     Mockito.when(request.getAttribute(FACTOR_NUMBER)).thenReturn(number);
     return request;
