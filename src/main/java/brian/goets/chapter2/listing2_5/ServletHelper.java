@@ -23,8 +23,11 @@ class ServletHelper {
     return (BigInteger) request.getAttribute(FACTOR_NUMBER);
   }
 
-  public static ServletResponse newResponseWithFactors(BigInteger[] factors) {
-    ServletResponse response = Mockito.mock(ServletResponse.class);
+  public static ServletResponse newServletResponse() {
+    return Mockito.mock(ServletResponse.class);
+  }
+
+  public static ServletResponse updateResponseWithFactors(ServletResponse response, BigInteger[] factors) {
     String factorsStr = Stream.of(factors)
         .map(BigInteger::toString)
         .collect(Collectors.joining(FACTORS_DELIMITER));
