@@ -14,7 +14,7 @@ public class TaskIterator {
 
   private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
-  public static <T> List<Future<T>> submitForExecutionForNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
+  public static <T> List<Future<T>> submitForExecutionNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
     ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS);
 
     List<Callable<T>> tasks = IntStream.rangeClosed(1, numberOfIterations)
@@ -29,7 +29,13 @@ public class TaskIterator {
     return executedTasks;
   }
 
-  public static <T> T getTaskResult(Future<T> future) {
+  public static <T> List<T> executeNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
+    return submitForExecutionNumberOfTimes(task, numberOfIterations)
+        .stream().map(TaskIterator::getTaskResult)
+        .collect(Collectors.toList());
+  }
+
+  private static <T> T getTaskResult(Future<T> future) {
     try {
       return future.get();
     } catch (ExecutionException | InterruptedException e) {

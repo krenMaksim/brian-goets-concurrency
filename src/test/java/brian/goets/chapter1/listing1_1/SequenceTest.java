@@ -3,7 +3,7 @@ package brian.goets.chapter1.listing1_1;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 
-import static brian.goets.test.util.TaskIterator.submitForExecutionForNumberOfTimes;
+import static brian.goets.test.util.TaskIterator.submitForExecutionNumberOfTimes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SequenceTest {
@@ -91,7 +91,7 @@ class SequenceTest {
   }
 
   private int doGivenNumberOfConcurrentIterations(Sequence sequence, int iterations) throws InterruptedException {
-    submitForExecutionForNumberOfTimes(() -> sequence.getNext(), iterations);
+    submitForExecutionNumberOfTimes(() -> sequence.getNext(), iterations);
     int lastNumber = sequence.getNext();
     System.out.println("LastNumber: " + lastNumber);
     return lastNumber;

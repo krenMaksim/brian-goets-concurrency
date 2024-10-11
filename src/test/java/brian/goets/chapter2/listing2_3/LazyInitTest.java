@@ -1,12 +1,11 @@
 package brian.goets.chapter2.listing2_3;
 
-import brian.goets.test.util.TaskIterator;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static brian.goets.test.util.TaskIterator.submitForExecutionForNumberOfTimes;
+import static brian.goets.test.util.TaskIterator.executeNumberOfTimes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LazyInitTest {
@@ -60,8 +59,8 @@ class LazyInitTest {
   }
 
   private int doGivenNumberOfConcurrentInitializations(LazyInit lazyInit, int iterations) throws InterruptedException {
-    Set<ExpensiveObject> createdInstances = submitForExecutionForNumberOfTimes(lazyInit::getInstance, iterations).stream()
-        .map(TaskIterator::getTaskResult)
+    Set<ExpensiveObject> createdInstances = executeNumberOfTimes(lazyInit::getInstance, iterations)
+        .stream()
         .collect(Collectors.toSet());
     System.out.println("Created instances: " + createdInstances);
     return createdInstances.size();

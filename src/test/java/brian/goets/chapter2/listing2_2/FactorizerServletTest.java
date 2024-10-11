@@ -5,7 +5,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import static brian.goets.test.util.TaskIterator.submitForExecutionForNumberOfTimes;
+import static brian.goets.test.util.TaskIterator.submitForExecutionNumberOfTimes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FactorizerServletTest {
@@ -33,7 +33,7 @@ class FactorizerServletTest {
   private long doGivenNumberOfConcurrentIterations(FactorizerServlet factorizer, int iterations) throws InterruptedException {
     ServletRequest reqDummy = null;
     ServletResponse respDummy = null;
-    submitForExecutionForNumberOfTimes(() -> {
+    submitForExecutionNumberOfTimes(() -> {
       factorizer.service(reqDummy, respDummy);
       return true;
     }, iterations);
