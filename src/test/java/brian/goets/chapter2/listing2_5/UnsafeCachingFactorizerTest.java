@@ -1,11 +1,10 @@
 package brian.goets.chapter2.listing2_5;
 
+import brian.goets.test.util.TaskIterator;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import javax.servlet.ServletRequest;
@@ -38,18 +37,9 @@ class UnsafeCachingFactorizerTest {
           BigInteger[] factors = ServletHelper.extractFactors(response);
           return new Result(new BigInteger(number), factors);
         }, iterations).stream()
-            .map(this::toResult)
+            .map(TaskIterator::getTaskResult)
             .collect(Collectors.toList());
     return createdInstances;
-  }
-
-  // TBD probably it might be shared
-  private Result toResult(Future<Result> future) {
-    try {
-      return future.get();
-    } catch (ExecutionException | InterruptedException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   static class Result {

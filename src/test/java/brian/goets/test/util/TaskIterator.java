@@ -2,6 +2,7 @@ package brian.goets.test.util;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -26,5 +27,13 @@ public class TaskIterator {
     exec.awaitTermination(30, TimeUnit.SECONDS);
 
     return executedTasks;
+  }
+
+  public static <T> T getTaskResult(Future<T> future) {
+    try {
+      return future.get();
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
