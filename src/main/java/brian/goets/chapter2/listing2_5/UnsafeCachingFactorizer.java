@@ -4,17 +4,16 @@ import net.jcip.annotations.NotThreadSafe;
 
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.servlet.GenericServlet;
-import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 @NotThreadSafe
-class UnsafeCachingFactorizer extends GenericServlet implements Servlet {
+class UnsafeCachingFactorizer extends CachingFactorizer {
 
   private final AtomicReference<BigInteger> lastNumber = new AtomicReference<>();
   private final AtomicReference<BigInteger[]> lastFactors = new AtomicReference<>();
 
+  @Override
   public void service(ServletRequest req, ServletResponse resp) {
     BigInteger i = extractFromRequest(req);
     if (i.equals(lastNumber.get())) {
@@ -25,18 +24,5 @@ class UnsafeCachingFactorizer extends GenericServlet implements Servlet {
       lastFactors.set(factors);
       encodeIntoResponse(resp, factors);
     }
-  }
-
-  void encodeIntoResponse(ServletResponse resp, BigInteger[] factors) {
-    ServletHelper.updateResponseWithFactors(resp, factors);
-  }
-
-  BigInteger extractFromRequest(ServletRequest req) {
-    return ServletHelper.extractFactorNumber(req);
-  }
-
-  BigInteger[] factor(BigInteger i) {
-    // Doesn't really factor
-    return new BigInteger[] {i};
   }
 }

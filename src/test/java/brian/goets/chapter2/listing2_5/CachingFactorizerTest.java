@@ -13,20 +13,20 @@ import static brian.goets.chapter2.listing2_5.ServletHelper.newServletResponse;
 import static brian.goets.test.util.TaskIterator.executeNumberOfTimes;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UnsafeCachingFactorizerTest {
+class CachingFactorizerTest {
 
   private static final int NUMBER_OF_ITERATIONS = 100;
 
   @RepeatedTest(10)
   void doGivenNumberOfRequestsOverUnsafeCachingFactorizer() throws InterruptedException {
-    UnsafeCachingFactorizer factorizer = new UnsafeCachingFactorizer();
+    CachingFactorizer factorizer = new UnsafeCachingFactorizer();
 
     List<Result> results = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
 
     results.forEach(result -> assertThat(result.factors).containsExactly(result.factorNumber));
   }
 
-  private List<Result> doGivenNumberOfConcurrentIterations(UnsafeCachingFactorizer factorizer, int iterations) throws InterruptedException {
+  private List<Result> doGivenNumberOfConcurrentIterations(CachingFactorizer factorizer, int iterations) throws InterruptedException {
     return executeNumberOfTimes(() -> {
       BigInteger factorNumber = newRandomBigInteger();
       ServletRequest request = newServletRequestWithFactorNumber(factorNumber);
