@@ -21,21 +21,19 @@ class UnsafeCachingFactorizerTest {
 
     List<Result> results = doGivenNumberOfConcurrentInitializations(factorizer, NUMBER_OF_ITERATIONS);
 
-    results.forEach(res -> res.assertThatInputMatchesResult());
+    results.forEach(result -> assertThat(result.getFactors()).containsExactly(result.getFactorNumber()));
   }
 
   private List<Result> doGivenNumberOfConcurrentInitializations(UnsafeCachingFactorizer factorizer, int iterations) throws InterruptedException {
-    List<Result> createdInstances =
-        executeNumberOfTimes(() -> {
-          String number = String.valueOf(ThreadLocalRandom.current().nextInt(10, 12 + 1));
-          ServletRequest request = ServletHelper.newServletRequestWithFactorNumber(new BigInteger(number));
-          ServletResponse response = ServletHelper.newServletResponse();
+    return executeNumberOfTimes(() -> {
+      String number = String.valueOf(ThreadLocalRandom.current().nextInt(10, 12 + 1));
+      ServletRequest request = ServletHelper.newServletRequestWithFactorNumber(new BigInteger(number));
+      ServletResponse response = ServletHelper.newServletResponse();
 
-          factorizer.service(request, response);
-          BigInteger[] factors = ServletHelper.extractFactors(response);
-          return new Result(new BigInteger(number), factors);
-        }, iterations);
-    return createdInstances;
+      factorizer.service(request, response);
+      BigInteger[] factors = ServletHelper.extractFactors(response);
+      return new Result(new BigInteger(number), factors);
+    }, iterations);
   }
 
   static class Result {
@@ -48,8 +46,12 @@ class UnsafeCachingFactorizerTest {
       this.factors = factors;
     }
 
-    public void assertThatInputMatchesResult() {
-      assertThat(factors).isEqualTo(new BigInteger[] {factorNumber});
+    public BigInteger getFactorNumber() {
+      return factorNumber;
+    }
+
+    public BigInteger[] getFactors() {
+      return factors;
     }
   }
 }
