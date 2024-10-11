@@ -60,8 +60,6 @@ class LazyInitTest {
     assertThat(createdInstancesNumber).isEqualTo(SINGLE_INSTANCE);
   }
 
-  // Try volatile
-
   private int doGivenNumberOfConcurrentInitializations(LazyInit lazyInit, int iterations) throws InterruptedException {
     Set<ExpensiveObject> createdInstances = submitForExecutionForNumberOfTimes(lazyInit::getInstance, iterations).stream()
         .map(this::toExpensiveObject)
