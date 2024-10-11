@@ -27,12 +27,11 @@ class ServletHelper {
     return Mockito.mock(ServletResponse.class);
   }
 
-  public static ServletResponse updateResponseWithFactors(ServletResponse response, BigInteger[] factors) {
+  public static void updateResponseWithFactors(ServletResponse response, BigInteger[] factors) {
     String factorsStr = Stream.of(factors)
         .map(BigInteger::toString)
         .collect(Collectors.joining(FACTORS_DELIMITER));
     Mockito.when(response.getContentType()).thenReturn(factorsStr);
-    return response;
   }
 
   public static BigInteger[] extractFactors(ServletResponse response) {

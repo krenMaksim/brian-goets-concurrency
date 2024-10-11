@@ -28,11 +28,11 @@ class UnsafeCachingFactorizer extends GenericServlet implements Servlet {
   }
 
   void encodeIntoResponse(ServletResponse resp, BigInteger[] factors) {
-    // NOOP
+    ServletHelper.updateResponseWithFactors(resp, factors);
   }
 
   BigInteger extractFromRequest(ServletRequest req) {
-    return new BigInteger("7");
+    return ServletHelper.extractFactorNumber(req);
   }
 
   BigInteger[] factor(BigInteger i) {
