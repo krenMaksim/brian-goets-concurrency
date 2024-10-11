@@ -23,31 +23,31 @@ class UnsafeCachingFactorizerTest {
 
   static class ServletHelper {
 
-    private static final String VALUE = "value";
+    private static final String FACTOR_NUMBER = "factorNumber";
     public static final String FACTORS_DELIMITER = " ";
 
-    public static ServletRequest newRequestWithNumber(BigInteger number) {
+    public static ServletRequest newRequestWithFactorNumber(BigInteger number) {
       ServletRequest request = Mockito.mock(ServletRequest.class);
-      Mockito.when(request.getAttribute(VALUE)).thenReturn(number);
+      Mockito.when(request.getAttribute(FACTOR_NUMBER)).thenReturn(number);
       return request;
     }
 
-    public static BigInteger extractNumber(ServletRequest request) {
-      return (BigInteger) request.getAttribute(VALUE);
+    public static BigInteger extractFactorNumber(ServletRequest request) {
+      return (BigInteger) request.getAttribute(FACTOR_NUMBER);
     }
 
     public static ServletResponse newResponseWithFactors(BigInteger[] factors) {
       ServletResponse response = Mockito.mock(ServletResponse.class);
-      String fac = Stream.of(factors)
+      String factorsStr = Stream.of(factors)
           .map(BigInteger::toString)
           .collect(Collectors.joining(FACTORS_DELIMITER));
-      Mockito.when(response.getContentType()).thenReturn(fac);
+      Mockito.when(response.getContentType()).thenReturn(factorsStr);
       return response;
     }
 
     public static BigInteger[] extractFactors(ServletResponse response) {
-      String[] fac = response.getContentType().split(FACTORS_DELIMITER);
-      return Stream.of(fac)
+      String[] factors = response.getContentType().split(FACTORS_DELIMITER);
+      return Stream.of(factors)
           .map(BigInteger::new)
           .toArray(size -> new BigInteger[size]);
     }
