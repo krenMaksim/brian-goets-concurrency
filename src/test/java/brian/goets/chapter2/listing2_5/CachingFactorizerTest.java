@@ -15,11 +15,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CachingFactorizerTest {
 
-  private static final int NUMBER_OF_ITERATIONS = 100;
+  private static final int NUMBER_OF_ITERATIONS = 10_000;
 
   @RepeatedTest(10)
   void doGivenNumberOfRequestsOverUnsafeCachingFactorizer() throws InterruptedException {
     CachingFactorizer factorizer = new UnsafeCachingFactorizer();
+
+    List<Result> results = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
+
+    results.forEach(result -> assertThat(result.factors).containsExactly(result.factorNumber));
+  }
+
+  @RepeatedTest(10)
+  void doGivenNumberOfRequestsOverSyncCachingFactorizer() throws InterruptedException {
+    CachingFactorizer factorizer = new SyncCachingFactorizer();
 
     List<Result> results = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
 
