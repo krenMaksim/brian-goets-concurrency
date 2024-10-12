@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import static brian.goets.chapter2.listing2_5.ServletHelper.extractFactors;
 import static brian.goets.chapter2.listing2_5.ServletHelper.newServletRequestWithFactorNumber;
 import static brian.goets.chapter2.listing2_5.ServletHelper.newServletResponse;
 import static brian.goets.test.util.TaskIterator.executeNumberOfTimes;
@@ -35,9 +36,6 @@ class CachingFactorizerTest {
     results.forEach(result -> assertThat(result.factors).containsExactly(result.factorNumber));
   }
 
-  // TBD add an example from listing 2.8 without counters due to it is more straightforward for understanding of
-  // synchronization. And add a note to SyncCachingFactorizer
-
   private List<Result> doGivenNumberOfConcurrentIterations(CachingFactorizer factorizer, int iterations) throws InterruptedException {
     return executeNumberOfTimes(() -> {
       BigInteger factorNumber = newRandomBigInteger();
@@ -45,7 +43,7 @@ class CachingFactorizerTest {
       ServletResponse response = newServletResponse();
 
       factorizer.service(request, response);
-      BigInteger[] factors = ServletHelper.extractFactors(response);
+      BigInteger[] factors = extractFactors(response);
 
       return new Result(factorNumber, factors);
     }, iterations);
