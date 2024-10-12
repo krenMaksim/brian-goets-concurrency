@@ -4,16 +4,14 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 @ThreadSafe
 class SyncCachingFactorizer extends CachingFactorizer {
 
-  // TBD think if having AtomicReference makes any sense at all here
-  private final AtomicReference<BigInteger> lastNumber = new AtomicReference<>();
-  private final AtomicReference<BigInteger[]> lastFactors = new AtomicReference<>();
+  private BigInteger lastNumber;
+  private BigInteger[] lastFactors;
 
   @Override
   public void service(ServletRequest req, ServletResponse resp) {
@@ -27,17 +25,17 @@ class SyncCachingFactorizer extends CachingFactorizer {
     encodeIntoResponse(resp, factors);
   }
 
-  // here we have atomic check and get
+  // Here we have atomic check and get
   private synchronized BigInteger[] fetchFromCache(BigInteger factorNumber) {
-    if (factorNumber.equals(lastNumber.get())) {
-      return lastFactors.get().clone(); // Take notice that we clone here. TBD think if it is really needed.
+    if (factorNumber.equals(lastNumber)) {
+      return lastFactors.clone(); // I'm still hesitant whether we need to clone here
     }
     return null;
   }
 
-  // here we have atomic set
+  // Here we have atomic double set
   private synchronized void updateCache(BigInteger factorNumber, BigInteger[] factors) {
-    lastNumber.set(factorNumber);
-    lastFactors.set(factors);
+    lastNumber = factorNumber;
+    lastFactors = factors.clone(); // I'm still hesitant whether we need to clone here
   }
 }
