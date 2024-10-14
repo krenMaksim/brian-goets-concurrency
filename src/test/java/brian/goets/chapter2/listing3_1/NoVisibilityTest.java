@@ -106,4 +106,10 @@ class NoVisibilityTest {
     exec.shutdown();
     exec.awaitTermination(30, TimeUnit.SECONDS);
   }
+
+  // TBD it might be option 2
+  @RepeatedTest(10_000)
+  void tryToSetStaticVariables7() {
+    NoVisibility.main(null);
+  }
 }
