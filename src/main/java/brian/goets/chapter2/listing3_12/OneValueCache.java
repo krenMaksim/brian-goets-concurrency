@@ -18,25 +18,25 @@ public class OneValueCache {
     return NULL_CACHE;
   }
 
-  private final BigInteger lastNumber;
-  private final BigInteger[] lastFactors;
+  private final BigInteger number;
+  private final BigInteger[] factors;
 
   private OneValueCache() {
-    lastNumber = null;
-    lastFactors = null;
+    number = null;
+    factors = null;
   }
 
   public OneValueCache(BigInteger lastNumber, BigInteger[] factors) {
     Objects.requireNonNull(lastNumber);
     Objects.requireNonNull(factors);
-    this.lastNumber = lastNumber;
-    this.lastFactors = newCopy(factors);
+    this.number = lastNumber;
+    this.factors = newCopy(factors);
   }
 
-  public BigInteger[] getFactors(BigInteger lastNumber) {
-    return Optional.ofNullable(lastNumber)
-        .filter(isEqual(this.lastNumber))
-        .map(number -> newCopy(lastFactors))
+  public BigInteger[] getFactors(BigInteger number) {
+    return Optional.ofNullable(number)
+        .filter(isEqual(this.number))
+        .map(num -> newCopy(factors))
         .orElse(null);
   }
 
