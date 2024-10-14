@@ -3,9 +3,12 @@ package brian.goets.chapter2.listing3_1;
 import brian.goets.test.util.TaskIterator;
 import org.junit.jupiter.api.RepeatedTest;
 
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class NoVisibilityTest {
@@ -55,12 +58,13 @@ class NoVisibilityTest {
     thread.join();
   }
 
+  // TBD mention that I could not reproduce expected issue via test
   @RepeatedTest(100)
   void tryToSetStaticVariables4() throws InterruptedException {
-    ExecutorService exec = Executors.newFixedThreadPool(10);
+    ExecutorService exec = Executors.newFixedThreadPool(20);
 
     System.out.println("execute");
-    IntStream.rangeClosed(1, 100000)
+    IntStream.rangeClosed(1, 1000)
         .forEach(i -> exec.execute(new NoVisibility.ReaderThread()));
     System.out.println("after execute");
 
@@ -69,6 +73,35 @@ class NoVisibilityTest {
     NoVisibility.number = 42;
     NoVisibility.ready = true;
     System.out.println("ddddd");
+
+    exec.shutdown();
+    exec.awaitTermination(30, TimeUnit.SECONDS);
+  }
+
+  @RepeatedTest(10)
+  void tryToSetStaticVariables5() throws InterruptedException {
+    ExecutorService exec = Executors.newFixedThreadPool(10);
+
+    Callable<Boolean> task = () -> {
+      new NoVisibility.ReaderThread().run();
+      return true;
+    };
+
+    Callable<Boolean> task2 = () -> {
+      NoVisibility.number = 42;
+      NoVisibility.ready = true;
+      return true;
+    };
+
+    List<Callable<Boolean>> tasks = IntStream.rangeClosed(1, 9)
+        .mapToObj(i -> task)
+        .collect(Collectors.toList());
+
+    tasks.add(task2);
+
+    System.out.println("execute");
+    exec.invokeAll(tasks);
+    System.out.println("after execute");
 
     exec.shutdown();
     exec.awaitTermination(30, TimeUnit.SECONDS);
