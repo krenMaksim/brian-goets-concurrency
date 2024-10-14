@@ -3,12 +3,9 @@ package brian.goets.chapter2.listing3_1;
 import brian.goets.test.util.TaskIterator;
 import org.junit.jupiter.api.RepeatedTest;
 
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class NoVisibilityTest {
@@ -58,20 +55,16 @@ class NoVisibilityTest {
     thread.join();
   }
 
-  @RepeatedTest(1)
+  @RepeatedTest(100)
   void tryToSetStaticVariables4() throws InterruptedException {
     ExecutorService exec = Executors.newFixedThreadPool(10);
 
-    Callable<Boolean> task = () -> {
-      new NoVisibility.ReaderThread().run();
-      return true;
-    };
+    System.out.println("execute");
+    IntStream.rangeClosed(1, 100000)
+        .forEach(i -> exec.execute(new NoVisibility.ReaderThread()));
+    System.out.println("after execute");
 
-    List<Callable<Boolean>> tasks = IntStream.rangeClosed(1, 20)
-        .mapToObj(i -> task)
-        .collect(Collectors.toList());
-
-    exec.invokeAll(tasks);
+    TimeUnit.NANOSECONDS.sleep(100);
 
     NoVisibility.number = 42;
     NoVisibility.ready = true;
