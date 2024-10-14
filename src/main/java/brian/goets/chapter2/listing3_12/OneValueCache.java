@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 @Immutable
-class OneValueCache {
+public class OneValueCache {
 
   private final BigInteger lastNumber;
   private final BigInteger[] lastFactors;
