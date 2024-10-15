@@ -1,5 +1,6 @@
 package brian.goets.chapter2.listing2_5;
 
+import brian.goets.chapter2.listing3_13.VolatileCachedFactorizer;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.math.BigInteger;
@@ -30,6 +31,15 @@ class CachingFactorizerTest {
   @RepeatedTest(10)
   void doGivenNumberOfRequestsOverSyncCachingFactorizer() throws InterruptedException {
     CachingFactorizer factorizer = new SyncCachingFactorizer();
+
+    List<Result> results = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
+
+    results.forEach(result -> assertThat(result.factors).containsExactly(result.factorNumber));
+  }
+
+  @RepeatedTest(10)
+  void doGivenNumberOfRequestsOverVolatileCachedFactorizer() throws InterruptedException {
+    CachingFactorizer factorizer = new VolatileCachedFactorizer();
 
     List<Result> results = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
 

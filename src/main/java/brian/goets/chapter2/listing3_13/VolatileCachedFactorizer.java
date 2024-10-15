@@ -11,7 +11,7 @@ import javax.servlet.ServletResponse;
 @ThreadSafe
 public class VolatileCachedFactorizer extends CachingFactorizer {
 
-  private volatile OneValueCache cache = new OneValueCache(null, null);
+  private volatile OneValueCache cache = OneValueCache.newNullCache();
 
   @Override
   public void service(ServletRequest req, ServletResponse resp) {
