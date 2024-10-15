@@ -26,10 +26,10 @@ public class OneValueCache {
     factors = null;
   }
 
-  public OneValueCache(BigInteger lastNumber, BigInteger[] factors) {
-    Objects.requireNonNull(lastNumber);
+  public OneValueCache(BigInteger number, BigInteger[] factors) {
+    Objects.requireNonNull(number);
     Objects.requireNonNull(factors);
-    this.number = lastNumber;
+    this.number = number;
     this.factors = newCopy(factors);
   }
 

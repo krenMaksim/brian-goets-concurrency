@@ -9,10 +9,11 @@ import java.math.BigInteger;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OneValueCacheTest {
 
-  private static Stream<Arguments> lastNumbersForNullCache() {
+  private static Stream<Arguments> numbersForNullCache() {
     return Stream.of(
         Arguments.of(BigInteger.valueOf(42))
     );
@@ -20,12 +21,27 @@ class OneValueCacheTest {
 
   @NullSource
   @ParameterizedTest
-  @MethodSource("lastNumbersForNullCache")
+  @MethodSource("numbersForNullCache")
   void nullOneValueCacheInitialization(BigInteger number) {
     OneValueCache nullCache = OneValueCache.newNullCache();
 
     BigInteger[] factors = nullCache.getFactors(number);
 
     assertThat(factors).isNull();
+  }
+
+  private static Stream<Arguments> invalidParameters() {
+    return Stream.of(
+        Arguments.of(BigInteger.valueOf(42), null),
+        Arguments.of(null, new BigInteger[] {BigInteger.valueOf(42)}),
+        Arguments.of(null, null)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("invalidParameters")
+  void tryToCreateOneValueWithInvalidParameters(BigInteger number, BigInteger[] factors) {
+    assertThatThrownBy(() -> new OneValueCache(number, factors))
+        .isInstanceOf(NullPointerException.class);
   }
 }
