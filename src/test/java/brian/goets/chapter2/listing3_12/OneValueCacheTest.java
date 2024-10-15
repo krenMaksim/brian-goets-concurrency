@@ -57,4 +57,15 @@ class OneValueCacheTest {
     assertThat(result).isEqualTo(factors);
     assertThat(result).isNotSameAs(factors);
   }
+
+  @Test
+  void getFactorsInCaseMissingCache() {
+    BigInteger number = BigInteger.valueOf(42);
+    BigInteger[] factors = new BigInteger[] {BigInteger.valueOf(1), BigInteger.valueOf(2), BigInteger.valueOf(3)};
+    OneValueCache cache = new OneValueCache(BigInteger.valueOf(43), factors);
+
+    BigInteger[] result = cache.getFactors(number);
+
+    assertThat(result).isNull();
+  }
 }
