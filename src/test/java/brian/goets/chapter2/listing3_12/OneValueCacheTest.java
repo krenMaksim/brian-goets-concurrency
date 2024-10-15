@@ -1,5 +1,6 @@
 package brian.goets.chapter2.listing3_12;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,5 +44,17 @@ class OneValueCacheTest {
   void tryToCreateOneValueWithInvalidParameters(BigInteger number, BigInteger[] factors) {
     assertThatThrownBy(() -> new OneValueCache(number, factors))
         .isInstanceOf(NullPointerException.class);
+  }
+
+  @Test
+  void getFactors() {
+    BigInteger number = BigInteger.valueOf(42);
+    BigInteger[] factors = new BigInteger[] {BigInteger.valueOf(1), BigInteger.valueOf(2), BigInteger.valueOf(3)};
+    OneValueCache cache = new OneValueCache(number, factors);
+
+    BigInteger[] result = cache.getFactors(number);
+
+    assertThat(result).isEqualTo(factors);
+    assertThat(result).isNotSameAs(factors);
   }
 }
