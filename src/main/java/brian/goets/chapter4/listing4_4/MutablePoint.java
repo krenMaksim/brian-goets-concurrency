@@ -5,15 +5,16 @@ import net.jcip.annotations.NotThreadSafe;
 @NotThreadSafe
 class MutablePoint {
 
-  public int x, y;
+  private int x;
+  private int y;
 
   public MutablePoint() {
     x = 0;
     y = 0;
   }
 
-  public MutablePoint(MutablePoint p) {
-    this.x = p.x;
-    this.y = p.y;
+  public MutablePoint(MutablePoint point) {
+    this.x = point.x;
+    this.y = point.y;
   }
 }
