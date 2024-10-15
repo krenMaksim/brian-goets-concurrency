@@ -1,4 +1,4 @@
-package brian.goets.chapter2.listing3_2;
+package brian.goets.chapter3.listing3_2;
 
 import net.jcip.annotations.NotThreadSafe;
 

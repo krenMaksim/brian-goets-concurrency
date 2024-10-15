@@ -1,4 +1,4 @@
-package brian.goets.chapter2.listing3_12;
+package brian.goets.chapter3.listing3_12;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

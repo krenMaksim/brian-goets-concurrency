@@ -1,6 +1,6 @@
 package brian.goets.chapter2.listing2_5;
 
-import brian.goets.chapter2.listing3_13.VolatileCachedFactorizer;
+import brian.goets.chapter3.listing3_13.VolatileCachedFactorizer;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.math.BigInteger;

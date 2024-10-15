@@ -1,4 +1,4 @@
-package brian.goets.chapter2.listing3_1;
+package brian.goets.chapter3.listing3_1;
 
 import org.junit.jupiter.api.RepeatedTest;
 

@@ -1,7 +1,7 @@
-package brian.goets.chapter2.listing3_13;
+package brian.goets.chapter3.listing3_13;
 
 import brian.goets.chapter2.listing2_5.CachingFactorizer;
-import brian.goets.chapter2.listing3_12.OneValueCache;
+import brian.goets.chapter3.listing3_12.OneValueCache;
 import net.jcip.annotations.ThreadSafe;
 
 import java.math.BigInteger;
