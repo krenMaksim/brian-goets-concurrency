@@ -2,9 +2,11 @@ package brian.goets.chapter4.listing4_4;
 
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toUnmodifiableMap;
 
 @ThreadSafe
 class MonitorVehicleTracker {
@@ -29,17 +31,17 @@ class MonitorVehicleTracker {
     if (loc == null) {
       throw new IllegalArgumentException("No such ID: " + id);
     }
-    loc.x = x;
-    loc.y = y;
+    loc.setX(x);
+    loc.setY(y);
   }
 
-  private static Map<String, MutablePoint> deepCopy(Map<String, MutablePoint> m) {
-    Map<String, MutablePoint> result = new HashMap<String, MutablePoint>();
-
-    for (String id : m.keySet()) {
-      result.put(id, new MutablePoint(m.get(id)));
-    }
-
-    return Collections.unmodifiableMap(result);
+  private static Map<String, MutablePoint> deepCopy(Map<String, MutablePoint> source) {
+    Function<String, MutablePoint> newMutablePointCopy = id -> {
+      MutablePoint point = source.get(id);
+      return new MutablePoint(point);
+    };
+    return source.keySet()
+        .stream()
+        .collect(toUnmodifiableMap(identity(), newMutablePointCopy));
   }
 }
