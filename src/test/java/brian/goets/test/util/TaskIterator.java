@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 
 public class TaskIterator {
 
-  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
+  public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   public static <T> List<Future<T>> submitForExecutionNumberOfTimes(Callable<T> task, int numberOfIterations) throws InterruptedException {
     ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS);
