@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static brian.goets.test.util.TaskIterator.AVAILABLE_PROCESSORS;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ConcurrentModificationDuringIterationTest {
@@ -47,6 +49,25 @@ class ConcurrentModificationDuringIterationTest {
     assertThatThrownBy(() -> future.get())
         .isInstanceOf(ExecutionException.class)
         .hasCauseInstanceOf(ConcurrentModificationException.class);
+  }
+
+  @Test
+  void iterateOverCopyOnWriteArrayList() throws ExecutionException {
+    List<Widget> widgetList = IntStream.rangeClosed(1, 10_000)
+        .mapToObj(i -> new Widget())
+        .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+
+    Future<?> future = exec.submit(() -> {
+      for (Widget w : widgetList) {
+        System.out.println(w);
+      }
+    });
+
+    exec.submit(() -> {
+      widgetList.remove(9_000);
+    });
+
+    assertThatCode(() -> future.get()).doesNotThrowAnyException();
   }
 
   @AfterEach
