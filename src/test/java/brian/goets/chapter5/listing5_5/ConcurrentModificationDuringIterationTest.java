@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,60 +13,59 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static brian.goets.test.util.TaskIterator.AVAILABLE_PROCESSORS;
+import static java.util.Collections.synchronizedList;
+import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ConcurrentModificationDuringIterationTest {
 
   private ExecutorService exec;
+  private Stream<Widget> widgetStream;
 
   @BeforeEach
   void setUp() {
     exec = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS);
+    widgetStream = IntStream.rangeClosed(1, 10_000)
+        .mapToObj(i -> new Widget());
   }
 
   @Test
   void iterateOverSynchronizedList() throws ExecutionException {
-    List<Widget> widgetList = IntStream.rangeClosed(1, 10_000)
-        .mapToObj(i -> new Widget())
-        .collect(Collectors.toCollection(() -> Collections.synchronizedList(new ArrayList<>())));
+    List<Widget> widgetList = widgetStream.collect(toCollection(() -> synchronizedList(new ArrayList<>())));
 
-    Future<?> future = exec.submit(() -> {
-      for (Widget w : widgetList) {
-        System.out.println(w);
-      }
-    });
+    Future<?> result = iterateOverWidgetsWithConcurrentModification(widgetList);
 
-    exec.submit(() -> {
-      widgetList.remove(9_000);
-    });
-
-    assertThatThrownBy(() -> future.get())
+    assertThatThrownBy(() -> result.get())
         .isInstanceOf(ExecutionException.class)
         .hasCauseInstanceOf(ConcurrentModificationException.class);
   }
 
   @Test
   void iterateOverCopyOnWriteArrayList() throws ExecutionException {
-    List<Widget> widgetList = IntStream.rangeClosed(1, 10_000)
-        .mapToObj(i -> new Widget())
-        .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+    List<Widget> widgetList = widgetStream.collect(toCollection(CopyOnWriteArrayList::new));
 
-    Future<?> future = exec.submit(() -> {
-      for (Widget w : widgetList) {
+    Future<?> result = iterateOverWidgetsWithConcurrentModification(widgetList);
+
+    assertThatCode(() -> result.get()).doesNotThrowAnyException();
+  }
+
+  private Future<?> iterateOverWidgetsWithConcurrentModification(List<Widget> widgets) {
+    Future<?> result = exec.submit(() -> {
+      for (Widget w : widgets) {
         System.out.println(w);
       }
     });
 
     exec.submit(() -> {
-      widgetList.remove(9_000);
+      widgets.remove(widgets.size() - 1);
     });
 
-    assertThatCode(() -> future.get()).doesNotThrowAnyException();
+    return result;
   }
 
   @AfterEach
