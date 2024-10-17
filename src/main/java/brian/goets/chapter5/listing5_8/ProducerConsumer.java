@@ -2,12 +2,8 @@ package brian.goets.chapter5.listing5_8;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Stream;
 
 class ProducerConsumer {
 
@@ -32,27 +28,6 @@ class ProducerConsumer {
         crawl(root);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-      }
-    }
-
-    private void crawl2(File root) {
-      Path startPath = root.toPath();
-
-      try (Stream<Path> stream = Files.walk(startPath)) {
-        stream.forEach(path -> {
-          if (Files.isDirectory(path)) {
-            System.out.println("Directory: " + path);
-          } else {
-            try {
-              fileQueue.put(path.toFile());
-            } catch (InterruptedException e) {
-              throw new RuntimeException(e);
-            }
-            //            System.out.println("File: " + path);
-          }
-        });
-      } catch (IOException e) {
-        e.printStackTrace();
       }
     }
 
