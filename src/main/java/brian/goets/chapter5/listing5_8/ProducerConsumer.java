@@ -13,14 +13,10 @@ class ProducerConsumer {
     private final FileFilter fileFilter;
     private final File root;
 
-    public FileCrawler(BlockingQueue<File> fileQueue, final FileFilter fileFilter, File root) {
+    public FileCrawler(BlockingQueue<File> fileQueue, FileFilter fileFilter, File root) {
       this.fileQueue = fileQueue;
       this.root = root;
-      this.fileFilter = new FileFilter() {
-        public boolean accept(File f) {
-          return f.isDirectory() || fileFilter.accept(f);
-        }
-      };
+      this.fileFilter = file -> file.isDirectory() || fileFilter.accept(file);
     }
 
     private boolean alreadyIndexed(File f) {
@@ -68,22 +64,16 @@ class ProducerConsumer {
     }
 
     public void indexFile(File file) {
-      // Index the file...
+      System.out.println(String.format("Index the file %s ...", file));
     }
-
-    ;
   }
 
   private static final int BOUND = 10;
   private static final int N_CONSUMERS = Runtime.getRuntime().availableProcessors();
 
   public static void startIndexing(File[] roots) {
-    BlockingQueue<File> queue = new LinkedBlockingQueue<File>(BOUND);
-    FileFilter filter = new FileFilter() {
-      public boolean accept(File file) {
-        return true;
-      }
-    };
+    BlockingQueue<File> queue = new LinkedBlockingQueue<>(BOUND);
+    FileFilter filter = file -> true;
 
     for (File root : roots) {
       new Thread(new FileCrawler(queue, filter, root)).start();
