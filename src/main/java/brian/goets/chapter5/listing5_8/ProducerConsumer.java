@@ -64,7 +64,7 @@ class ProducerConsumer {
     }
 
     public void indexFile(File file) {
-      System.out.println(String.format("Index the file %s ...", file));
+      System.out.println(String.format("Index the file '%s' ...", file));
     }
   }
 
