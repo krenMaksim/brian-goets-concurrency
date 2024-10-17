@@ -20,6 +20,7 @@ class ProducerConsumerTest {
 
   @AfterEach
   void tearDown() throws InterruptedException {
+    // it is needed to allocate some time for files to be processed
     TimeUnit.SECONDS.sleep(30);
   }
 }
