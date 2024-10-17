@@ -35,10 +35,11 @@ public class TaskIterator {
         .collect(Collectors.toList());
   }
 
-  private static <T> T getTaskResult(Future<T> future) {
+  public static <T> T getTaskResult(Future<T> future) {
     try {
       return future.get();
     } catch (ExecutionException | InterruptedException e) {
+      // TBD I'm not so sure if it is correct solution
       throw new RuntimeException(e);
     }
   }

@@ -1,14 +1,21 @@
 package brian.goets.chapter5.listing5_8;
 
-import org.junit.jupiter.api.AfterEach;
+import brian.goets.chapter5.listing5_8.ProducerConsumer.FileCrawler;
+import brian.goets.chapter5.listing5_8.ProducerConsumer.Indexer;
+import brian.goets.test.util.TaskIterator;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static brian.goets.test.util.TaskIterator.AVAILABLE_PROCESSORS;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -34,23 +41,26 @@ class ProducerConsumerTest {
 
     BlockingQueue<File> queue = new LinkedBlockingQueue<>(BOUND);
 
-    for (File root : roots) {
-      new Thread(new ProducerConsumer.FileCrawler(queue, root)).start();
-    }
+    List<Future<?>> crawlers = Stream.of(roots)
+        .map(root -> new FileCrawler(queue, root))
+        .map(exec::submit)
+        .collect(Collectors.toList());
 
-    for (int i = 0; i < N_CONSUMERS; i++) {
-      new Thread(new ProducerConsumer.Indexer(queue)).start();
+    List<Future<?>> indexers = IntStream.rangeClosed(1, N_CONSUMERS)
+        .mapToObj(i -> new Indexer(queue))
+        .map(exec::submit)
+        .collect(Collectors.toList());
+
+    crawlers.forEach(TaskIterator::getTaskResult);
+
+    while (true) {
+      if (queue.isEmpty()) {
+        indexers.forEach(indexerTask -> indexerTask.cancel(true));
+        break;
+      }
     }
 
     exec.shutdown();
     exec.awaitTermination(30, TimeUnit.SECONDS);
-  }
-
-  // rewrite startIndexing based on executors
-
-  @AfterEach
-  void tearDown() throws InterruptedException {
-    // it is needed to allocate some time for files to be processed
-
   }
 }
