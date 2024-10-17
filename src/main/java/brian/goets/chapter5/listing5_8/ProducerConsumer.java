@@ -9,6 +9,8 @@ class ProducerConsumer {
 
   static class FileCrawler implements Runnable {
 
+    private static final FileFilter DEFAULT_FILTER = file -> true;
+
     private final BlockingQueue<File> fileQueue;
     private final FileFilter fileFilter;
     private final File root;
@@ -17,6 +19,10 @@ class ProducerConsumer {
       this.fileQueue = fileQueue;
       this.root = root;
       this.fileFilter = file -> file.isDirectory() || fileFilter.accept(file);
+    }
+
+    public FileCrawler(BlockingQueue<File> fileQueue, File root) {
+      this(fileQueue, DEFAULT_FILTER, root);
     }
 
     private boolean alreadyIndexed(File f) {
@@ -73,10 +79,8 @@ class ProducerConsumer {
 
   public static void startIndexing(File[] roots) {
     BlockingQueue<File> queue = new LinkedBlockingQueue<>(BOUND);
-    FileFilter filter = file -> true;
-
     for (File root : roots) {
-      new Thread(new FileCrawler(queue, filter, root)).start();
+      new Thread(new FileCrawler(queue, root)).start();
     }
 
     for (int i = 0; i < N_CONSUMERS; i++) {
