@@ -27,6 +27,7 @@ class Preloader {
     try {
       return future.get();
     } catch (ExecutionException e) {
+      // take notice how ExecutionException handled
       Throwable cause = e.getCause();
       if (cause instanceof DataLoadException dataLoadException) {
         throw dataLoadException;
