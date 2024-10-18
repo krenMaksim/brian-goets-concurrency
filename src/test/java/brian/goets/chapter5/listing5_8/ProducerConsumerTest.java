@@ -33,7 +33,7 @@ class ProducerConsumerTest {
   }
 
   private static final int BOUND = 10;
-  private static final int N_CONSUMERS = Runtime.getRuntime().availableProcessors();
+  private static final int N_CONSUMERS = 10;
 
   @Test
   void startIndexingUsingExecutors() throws InterruptedException {
