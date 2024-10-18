@@ -28,8 +28,8 @@ class Preloader {
       return future.get();
     } catch (ExecutionException e) {
       Throwable cause = e.getCause();
-      if (cause instanceof DataLoadException) {
-        throw (DataLoadException) cause;
+      if (cause instanceof DataLoadException dataLoadException) {
+        throw dataLoadException;
       } else {
         throw LaunderThrowable.launderThrowable(cause);
       }

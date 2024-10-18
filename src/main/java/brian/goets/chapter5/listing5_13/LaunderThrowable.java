@@ -9,10 +9,10 @@ public class LaunderThrowable {
    * RuntimeException return it, otherwise throw IllegalStateException
    */
   public static RuntimeException launderThrowable(Throwable t) {
-    if (t instanceof RuntimeException) {
-      return (RuntimeException) t;
-    } else if (t instanceof Error) {
-      throw (Error) t;
+    if (t instanceof RuntimeException runtimeException) {
+      return runtimeException;
+    } else if (t instanceof Error error) {
+      throw error;
     } else {
       throw new IllegalStateException("Not unchecked", t);
     }
