@@ -4,11 +4,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TestHarnessTest {
 
-  private static final int NUMBER_THREADS = 50;
+  private static final int NUMBER_THREADS = 2;
 
   @BeforeEach
   void setUp() {
@@ -16,11 +16,12 @@ class TestHarnessTest {
   }
 
   @Test
-  void timeTasks() {
+  void timeTasks() throws InterruptedException {
     TestHarness testHarness = new TestHarness();
 
-    assertThatCode(() -> testHarness.timeTasks(NUMBER_THREADS, this::doSomeJob))
-        .doesNotThrowAnyException();
+    long executionTime = testHarness.timeTasks(NUMBER_THREADS, this::doSomeJob);
+
+    assertThat(executionTime).isLessThan(1_000_000);
   }
 
   private void doSomeJob() {
