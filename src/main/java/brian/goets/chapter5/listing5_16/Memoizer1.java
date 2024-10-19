@@ -1,12 +1,11 @@
-package brian.goets.chapter5.scalable.cache;
+package brian.goets.chapter5.listing5_16;
 
-import brian.goets.chapter5.scalable.cache.util.Computable;
 import net.jcip.annotations.GuardedBy;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Memoizer1<A, V> implements Computable<A, V> {
+class Memoizer1<A, V> implements Computable<A, V> {
 
   @GuardedBy("this")
   private final Map<A, V> cache = new HashMap<A, V>();

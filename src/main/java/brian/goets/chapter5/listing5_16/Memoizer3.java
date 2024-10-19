@@ -1,7 +1,6 @@
-package brian.goets.chapter5.scalable.cache;
+package brian.goets.chapter5.listing5_16;
 
 import brian.goets.chapter5.listing5_13.LaunderThrowable;
-import brian.goets.chapter5.scalable.cache.util.Computable;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -10,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-public class Memoizer3<A, V> implements Computable<A, V> {
+class Memoizer3<A, V> implements Computable<A, V> {
 
   private final Map<A, Future<V>> cache = new ConcurrentHashMap<A, Future<V>>();
   private final Computable<A, V> c;
