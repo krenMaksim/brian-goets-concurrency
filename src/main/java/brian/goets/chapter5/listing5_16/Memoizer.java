@@ -12,11 +12,12 @@ import java.util.concurrent.FutureTask;
 
 class Memoizer<A, V> implements Computable<A, V> {
 
-  private final ConcurrentMap<A, Future<V>> cache = new ConcurrentHashMap<>();
+  private final ConcurrentMap<A, Future<V>> cache;
   private final Computable<A, V> c;
 
   public Memoizer(Computable<A, V> c) {
     this.c = c;
+    this.cache = new ConcurrentHashMap<>();
   }
 
   @Override
