@@ -5,8 +5,8 @@ import java.util.Map;
 
 class Memoizer1<A, V> implements Computable<A, V> {
 
-  private final Map<A, V> cache;
   private final Computable<A, V> c;
+  private final Map<A, V> cache;
 
   public Memoizer1(Computable<A, V> c) {
     this.c = c;

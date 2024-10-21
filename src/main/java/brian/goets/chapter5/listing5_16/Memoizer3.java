@@ -11,8 +11,8 @@ import static brian.goets.chapter5.listing5_13.LaunderThrowable.launderThrowable
 
 class Memoizer3<A, V> implements Computable<A, V> {
 
-  private final Map<A, Future<V>> cache;
   private final Computable<A, V> c;
+  private final Map<A, Future<V>> cache;
 
   public Memoizer3(Computable<A, V> c) {
     this.c = c;
