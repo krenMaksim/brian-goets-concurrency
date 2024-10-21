@@ -5,11 +5,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class Memoizer2<A, V> implements Computable<A, V> {
 
-  private final Map<A, V> cache = new ConcurrentHashMap<A, V>();
+  private final Map<A, V> cache;
   private final Computable<A, V> c;
 
   public Memoizer2(Computable<A, V> c) {
     this.c = c;
+    this.cache = new ConcurrentHashMap<>();
   }
 
   @Override
