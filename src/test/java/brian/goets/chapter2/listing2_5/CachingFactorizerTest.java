@@ -46,6 +46,15 @@ class CachingFactorizerTest {
     results.forEach(result -> assertThat(result.factors).containsExactly(result.factorNumber));
   }
 
+  @RepeatedTest(10)
+  void doGivenNumberOfRequestsOverMemoizerCachingFactorizer() throws InterruptedException {
+    CachingFactorizer factorizer = new MemoizerCachingFactorizer();
+
+    List<Result> results = doGivenNumberOfConcurrentIterations(factorizer, NUMBER_OF_ITERATIONS);
+
+    results.forEach(result -> assertThat(result.factors).containsExactly(result.factorNumber));
+  }
+
   private List<Result> doGivenNumberOfConcurrentIterations(CachingFactorizer factorizer, int iterations) throws InterruptedException {
     return executeNumberOfTimes(() -> {
       BigInteger factorNumber = newRandomBigInteger();
