@@ -18,11 +18,7 @@ class TaskExecutionWebServer {
     ServerSocket socket = new ServerSocket(8081);
     while (true) {
       final Socket connection = socket.accept();
-      Runnable task = new Runnable() {
-        public void run() {
-          handleRequest(connection);
-        }
-      };
+      Runnable task = () -> handleRequest(connection);
       exec.execute(task);
     }
   }
