@@ -17,7 +17,7 @@ class SingleThreadWebServer {
     }
   }
 
-  private static void handleRequest(Socket connection) {
+  static void handleRequest(Socket connection) {
     try {
       String content = convert(connection.getInputStream());
       System.out.println(content);
