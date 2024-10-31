@@ -10,35 +10,34 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public class CompletionServiceInvestigation {
-    private static final int TASKS_NUMBER = 3;
 
-    private static final Callable<String> task = () -> {
-	TimeUnit.SECONDS.sleep(1);
-	String threadName = Thread.currentThread().getName();
-	System.out.println(threadName);
-	TimeUnit.SECONDS.sleep(1);
+  private static final int TASKS_NUMBER = 3;
 
-	return threadName;
-    };
+  private static final Callable<String> task = () -> {
+    TimeUnit.SECONDS.sleep(1);
+    String threadName = Thread.currentThread().getName();
+    System.out.println(threadName);
+    TimeUnit.SECONDS.sleep(1);
 
-    public static void main(String[] args) {
-	ExecutorService ex = Executors.newFixedThreadPool(2);
-	CompletionService<String> completionService = new ExecutorCompletionService<>(ex);
+    return threadName;
+  };
 
-	IntStream.rangeClosed(1, TASKS_NUMBER).forEach(i -> completionService.submit(task));
+  public static void main(String[] args) {
+    ExecutorService ex = Executors.newFixedThreadPool(2);
+    CompletionService<String> completionService = new ExecutorCompletionService<>(ex);
 
-	IntStream.rangeClosed(1, TASKS_NUMBER).forEach(i -> {
-	    try {
-		String result = completionService.take().get();
+    IntStream.rangeClosed(1, TASKS_NUMBER).forEach(i -> completionService.submit(task));
 
-		System.out.println("result: " + result);
+    IntStream.rangeClosed(1, TASKS_NUMBER).forEach(i -> {
+      try {
+        String result = completionService.take().get();
 
-	    } catch (InterruptedException | ExecutionException e) {
-		e.printStackTrace();
-	    }
-	});
+        System.out.println("result: " + result);
+      } catch (InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+      }
+    });
 
-	ex.shutdown();
-
-    }
+    ex.shutdown();
+  }
 }
