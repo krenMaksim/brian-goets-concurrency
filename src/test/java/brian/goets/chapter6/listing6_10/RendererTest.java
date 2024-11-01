@@ -1,6 +1,7 @@
 package brian.goets.chapter6.listing6_10;
 
 import brian.goets.chapter6.listing6_13.FutureRenderer;
+import brian.goets.chapter6.listing6_15.ExecutorCompletionServiceRenderer;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -19,6 +20,13 @@ class RendererTest {
   @Test
   void renderPageViaFutureRenderer() {
     Renderer renderer = new FutureRenderer();
+
+    assertThatCode(() -> renderer.renderPage(PAGE)).doesNotThrowAnyException();
+  }
+
+  @Test
+  void renderPageViaExecutorCompletionServiceRenderer() {
+    Renderer renderer = new ExecutorCompletionServiceRenderer();
 
     assertThatCode(() -> renderer.renderPage(PAGE)).doesNotThrowAnyException();
   }
