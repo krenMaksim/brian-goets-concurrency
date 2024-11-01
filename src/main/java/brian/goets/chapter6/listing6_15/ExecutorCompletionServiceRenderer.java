@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static brian.goets.chapter5.listing5_13.LaunderThrowable.launderThrowable;
 
@@ -28,8 +28,8 @@ public class ExecutorCompletionServiceRenderer extends Renderer {
 
     renderText(page);
 
-    IntStream.rangeClosed(1, imagesInfo.size())
-        .mapToObj(i -> getCompletedTaskResult())
+    Stream.generate(this::getCompletedTaskResult)
+        .limit(imagesInfo.size())
         .forEach(this::renderImage);
   }
 
