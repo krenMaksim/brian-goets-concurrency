@@ -2,10 +2,11 @@ package brian.goets.chapter6.listing6_10;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
-abstract class Renderer {
+public abstract class Renderer {
 
-  protected abstract void renderPage(CharSequence source);
+  public abstract void renderPage(CharSequence source);
 
   protected void renderText(CharSequence text) {
     System.out.println("[text: " + text + "]");
@@ -33,12 +34,16 @@ abstract class Renderer {
 
     @Override
     public ImageData downloadImage() {
-      return new ImageData() {
-        @Override
-        public int hashCode() {
-          return super.hashCode();
-        }
-      };
+      imitateImageDownloading();
+      return new ImageDataImpl();
+    }
+
+    private static void imitateImageDownloading() {
+      LongStream.rangeClosed(1, 10_000_000_000L).sum();
+    }
+
+    private static class ImageDataImpl implements ImageData {
+
     }
   }
 }
