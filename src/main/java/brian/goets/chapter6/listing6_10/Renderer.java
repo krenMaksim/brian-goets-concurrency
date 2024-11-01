@@ -22,10 +22,10 @@ public abstract class Renderer {
     System.out.println("[image: " + imageData + "]");
   }
 
-  interface ImageData {
+  public interface ImageData {
   }
 
-  interface ImageInfo {
+  public interface ImageInfo {
 
     ImageData downloadImage();
   }
