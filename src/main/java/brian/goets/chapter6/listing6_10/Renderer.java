@@ -38,7 +38,8 @@ public abstract class Renderer {
       return new ImageDataImpl();
     }
 
-    private static void imitateImageDownloading() {
+    private void imitateImageDownloading() {
+      System.out.printf("[%s] \t [downloading image: %s]%n", Thread.currentThread().getName(), this);
       LongStream.rangeClosed(1, 10_000_000_000L).sum();
     }
 
