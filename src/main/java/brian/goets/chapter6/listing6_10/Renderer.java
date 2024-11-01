@@ -8,7 +8,7 @@ public abstract class Renderer {
   public abstract void renderPage(CharSequence source);
 
   protected void renderText(CharSequence text) {
-    System.out.printf("[%s] \t [text: %s]%n", Thread.currentThread().getName(), text);
+    System.out.printf("[%s] \t\t\t [rendering text: %s]%n", Thread.currentThread().getName(), text);
   }
 
   protected List<ImageInfo> scanForImageInfo(CharSequence text) {
@@ -19,7 +19,7 @@ public abstract class Renderer {
   }
 
   protected void renderImage(ImageData imageData) {
-    System.out.printf("[%s] \t [image: %s]%n", Thread.currentThread().getName(), imageData);
+    System.out.printf("[%s] \t\t\t [rendering image: %s]%n", Thread.currentThread().getName(), imageData);
   }
 
   public interface ImageData {
@@ -34,13 +34,14 @@ public abstract class Renderer {
 
     @Override
     public ImageData downloadImage() {
-      imitateImageDownloading();
-      return new ImageDataImpl();
+      ImageData imageData = new ImageDataImpl();
+      imitateImageDownloading(imageData);
+      return imageData;
     }
 
-    private void imitateImageDownloading() {
-      System.out.printf("[%s] \t [downloading image: %s]%n", Thread.currentThread().getName(), this);
-      LongStream.rangeClosed(1, 10_000_000_000L).sum();
+    private static void imitateImageDownloading(ImageData imageData) {
+      System.out.printf("[%s] \t\t\t [downloading image: %s]%n", Thread.currentThread().getName(), imageData);
+      LongStream.rangeClosed(1, 5_000_000_000L).sum();
     }
 
     private static class ImageDataImpl implements ImageData {
