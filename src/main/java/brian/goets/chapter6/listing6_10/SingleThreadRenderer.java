@@ -6,8 +6,7 @@ abstract class SingleThreadRenderer {
 
   void renderPage(CharSequence source) {
     renderText(source);
-    scanForImageInfo(source)
-        .stream()
+    scanForImageInfo(source).stream()
         .map(ImageInfo::downloadImage)
         .forEach(this::renderImage);
   }
