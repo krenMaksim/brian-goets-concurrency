@@ -1,7 +1,8 @@
 package brian.goets.chapter6.listing6_10;
 
 import java.util.List;
-import java.util.stream.LongStream;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public abstract class Renderer {
 
@@ -41,7 +42,12 @@ public abstract class Renderer {
 
     private static void imitateImageDownloading(ImageData imageData) {
       System.out.printf("[%s] \t\t\t [downloading image: %s]%n", Thread.currentThread().getName(), imageData);
-      LongStream.rangeClosed(1, 5_000_000_000L).sum();
+      int randomSeconds = ThreadLocalRandom.current().nextInt(1, 10);
+      try {
+        TimeUnit.SECONDS.sleep(randomSeconds);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
     }
 
     private static class ImageDataImpl implements ImageData {
