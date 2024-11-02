@@ -40,9 +40,8 @@ public class ExecutorCompletionServiceRenderer extends Renderer {
     } catch (InterruptedException e) {
       // Re-assert the thread’s interrupted status
       Thread.currentThread().interrupt();
-      // We don’t need the result, so cancel the task too
-      // TBD think about why we do not need to cancel it like task.cancel(true)
-      return null;// TBD think about it
+      // The task does not need to be cancelled due to only completed result is returned
+      throw new RuntimeException(e);
     } catch (ExecutionException e) {
       throw launderThrowable(e.getCause());
     }
