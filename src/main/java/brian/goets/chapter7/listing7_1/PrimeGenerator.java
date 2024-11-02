@@ -6,17 +6,13 @@ import net.jcip.annotations.ThreadSafe;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @ThreadSafe
-public class PrimeGenerator implements Runnable {
-
-  private static ExecutorService exec = Executors.newCachedThreadPool();
+class PrimeGenerator implements Runnable {
 
   @GuardedBy("this")
-  private final List<BigInteger> primes = new ArrayList<BigInteger>();
+  private final List<BigInteger> primes = new ArrayList<>();
   private volatile boolean cancelled;
 
   @Override
@@ -35,12 +31,12 @@ public class PrimeGenerator implements Runnable {
   }
 
   public synchronized List<BigInteger> get() {
-    return new ArrayList<BigInteger>(primes);
+    return new ArrayList<>(primes);
   }
 
-  static List<BigInteger> aSecondOfPrimes() throws InterruptedException {
+  public static List<BigInteger> aSecondOfPrimes() throws InterruptedException {
     PrimeGenerator generator = new PrimeGenerator();
-    exec.execute(generator);
+    new Thread(generator).start();
     try {
       TimeUnit.SECONDS.sleep(1);
     } finally {
