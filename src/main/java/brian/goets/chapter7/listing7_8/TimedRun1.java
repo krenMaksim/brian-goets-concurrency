@@ -4,19 +4,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class TimedRun1 {
-    private static final ScheduledExecutorService cancelExec = Executors.newScheduledThreadPool(1);
+class TimedRun1 {
 
-    public static void timedRun(Runnable r, long timeout, TimeUnit unit) {
-        final Thread taskThread = Thread.currentThread();
+  private static final ScheduledExecutorService cancelExec = Executors.newScheduledThreadPool(1);
 
-        cancelExec.schedule(new Runnable() {
-            @Override
-            public void run() {
-                taskThread.interrupt();
-            }
-        }, timeout, unit);
+  // Don’t do this. Answer why.
+  public static void timedRun(Runnable r, long timeout, TimeUnit unit) {
+    Thread taskThread = Thread.currentThread();
 
-        r.run();
-    }
+    cancelExec.schedule(() -> taskThread.interrupt(), timeout, unit);
+
+    r.run();
+  }
 }
