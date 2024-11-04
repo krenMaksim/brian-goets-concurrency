@@ -22,7 +22,7 @@ class BrokenPrimeProducer extends Thread {
         queue.put(p = p.nextProbablePrime());
       }
     } catch (InterruptedException consumed) {
-
+      /* Allow thread to exit */
     }
   }
 
