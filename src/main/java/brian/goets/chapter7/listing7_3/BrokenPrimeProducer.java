@@ -4,27 +4,29 @@ import java.math.BigInteger;
 import java.util.concurrent.BlockingQueue;
 
 class BrokenPrimeProducer extends Thread {
-    private final BlockingQueue<BigInteger> queue;
-    private volatile boolean cancelled = false;
 
-    BrokenPrimeProducer(BlockingQueue<BigInteger> queue) {
-        this.queue = queue;
+  private final BlockingQueue<BigInteger> queue;
+  private volatile boolean cancelled;
+
+  public BrokenPrimeProducer(BlockingQueue<BigInteger> queue) {
+    this.queue = queue;
+    this.cancelled = false;
+  }
+
+  // Answer. What is wrong with this method?
+  @Override
+  public void run() {
+    try {
+      BigInteger p = BigInteger.ONE;
+      while (!cancelled) {
+        queue.put(p = p.nextProbablePrime());
+      }
+    } catch (InterruptedException consumed) {
+
     }
+  }
 
-    @Override
-    public void run() {
-        try {
-            BigInteger p = BigInteger.ONE;
-            while (!cancelled) {
-                queue.put(p = p.nextProbablePrime());
-            }
-            System.out.println("BrokenPrimeProducer has been cancelled");
-        } catch (InterruptedException consumed) {
-
-        }
-    }
-
-    public void cancel() {
-        cancelled = true;
-    }
+  public void cancel() {
+    cancelled = true;
+  }
 }
