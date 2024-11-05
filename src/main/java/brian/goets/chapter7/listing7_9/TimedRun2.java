@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class TimedRun2 {
+class TimedRun2 {
 
   private static final ScheduledExecutorService cancelExec = Executors.newScheduledThreadPool(1);
 
@@ -24,9 +24,9 @@ public class TimedRun2 {
       }
 
       void rethrow() {
-          if (t != null) {
-              throw LaunderThrowable.launderThrowable(t);
-          }
+        if (t != null) {
+          throw LaunderThrowable.launderThrowable(t);
+        }
       }
     }
 
@@ -34,11 +34,7 @@ public class TimedRun2 {
     final Thread taskThread = new Thread(task);
     taskThread.start();
 
-    cancelExec.schedule(new Runnable() {
-      public void run() {
-        taskThread.interrupt();
-      }
-    }, timeout, unit);
+    cancelExec.schedule(() -> taskThread.interrupt(), timeout, unit);
 
     taskThread.join(unit.toMillis(timeout));
     task.rethrow();
