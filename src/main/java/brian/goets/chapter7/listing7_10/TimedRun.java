@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class TimedRun {
+class TimedRun {
 
   private static final ExecutorService taskExec = Executors.newCachedThreadPool();
 
