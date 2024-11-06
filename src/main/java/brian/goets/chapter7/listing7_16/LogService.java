@@ -26,6 +26,6 @@ class LogService {
   }
 
   public void log(String msg) {
-    exec.submit(() -> writer.println(msg));
+    exec.execute(() -> writer.println(msg));
   }
 }
