@@ -7,7 +7,7 @@ import java.io.Writer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class LogService {
+class LogService {
 
   private final BlockingQueue<String> queue;
   private final LoggerThread loggerThread;
@@ -19,7 +19,7 @@ public class LogService {
   private int reservations;
 
   public LogService(Writer writer) {
-    this.queue = new LinkedBlockingQueue<String>();
+    this.queue = new LinkedBlockingQueue<>();
     this.loggerThread = new LoggerThread();
     this.writer = new PrintWriter(writer);
   }
@@ -52,9 +52,9 @@ public class LogService {
         while (true) {
           try {
             synchronized (LogService.this) {
-                if (isShutdown && reservations == 0) {
-                    break;
-                }
+              if (isShutdown && reservations == 0) {
+                break;
+              }
             }
             String msg = queue.take();
             synchronized (LogService.this) {
